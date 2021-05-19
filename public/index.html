@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <link rel="stylesheet" href="style.css" />
+
+
+</head>
+
+<body class="crt" >
+    
+    <div  class="status crt">
+        <div class="stat">Fuel<span id="stat-fuel" class="stat-value"></span></div>
+        <div class="stat">Crew <span id="stat-crew" class="stat-value"></span></div>
+        <div class="stat">Hull <span id="stat-hull" class="stat-value"></span></div>
+        <div class="stat">Oxygen <span id="stat-oxygen" class="stat-value"></span></div>
+        <div class="stat">Torpedoes <span id="stat-torpedoes" class="stat-value"></span></div>
+        <div class="stat">Money <span id="stat-money" class="stat-value"></span></div>
+        <div class="stat">Morale <span id="stat-morale" class="stat-value"></span></div>
+    </div>
+    <div id="ascii"><pre>
+
+   _____  ____   ___    ______ ______
+   / ___/ / __ \ /   |  / ____// ____/
+   \__ \ / /_/ // /| | / /    / __/   
+  ___/ // ____// ___ |/ /___ / /___   
+ /____//_/    /_/  |_|\____//_____/   
+                                      
+        __ __  _   __ ____ ______ __  __ ______
+       / //_/ / | / //  _// ____// / / //_  __/
+      / ,<   /  |/ / / / / / __ / /_/ /  / /   
+     / /| | / /|  /_/ / / /_/ // __  /  / /    
+    /_/ |_|/_/ |_//___/ \____//_/ /_/  /_/     
+                                                                    
+    </pre></div>
+
+    <div class="inventory crt">
+        <div id="inventory-title">Inventory</div>
+        <div class="stat"> <span id="stat-sword" class="stat-value"></span></div>
+        <div class="stat"> <span id="stat-map" class="stat-value"></span></div>
+        <div class="stat"> <span id="stat-laser-gun" class="stat-value"></span></div>
+        <div class="stat"> <span id="stat-keycard" class="stat-value"></span></div>
+        <div class="stat"> <span id="stat-ammo" class="stat-value"></span></div>
+        <div class="stat"> <span id="stat-unsent-letter" class="stat-value"></span></div>
+
+
+    </div>
+    <div class="action-terminal">
+<button  id="action">ACTION</button>
+
+
+    </div>
+
+    <div id="terminal">
+        <p id="opening-scroll"></p> 
+        <!-- <form id="form">
+            <input id="input" autofocus>
+        </form> -->
+        <button id="begin">BEGIN YOUR JOURNEY</button>
+
+    </div>
+<div id="append-here"></div>
+<!-- <div id="frame"><img id="frame-png" src="assets/frame.png"> -->
+<div id="canvas crt"></div>    
+</div>
+<script src="canvas.js"></script>
+
+        <script src="event.js"></script>
+
+        <script src="app.js"></script>
+        <script src="ship.js"></script>
+        <script src="menu.js"></script>
+
+        <script src="game.js"></script>
+
+
+
+
+</body>
+
+</html>
