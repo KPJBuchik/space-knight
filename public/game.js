@@ -3,16 +3,22 @@ var SpaceKnight = SpaceKnight || {};
 
 SpaceKnight.Game = {};
 
-SpaceKnight.Game.gameOver = false;
-SpaceKnight.Game.sequence = 0;
+
 
 SpaceKnight.input = "";
 SpaceKnight.Game.GAME_STARTED = false;
 let begin = document.getElementById("begin");
 begin.addEventListener("click", function () { (SpaceKnight.Game.init()) });
+this.ui = SpaceKnight.UI;
 
 
 SpaceKnight.Game.init = function () {
+  SpaceKnight.Game.gameOver = false;
+  SpaceKnight.Game.sequence = 0;
+  SpaceKnight.Game.sequence2 = 0;
+  SpaceKnight.Game.computerWin = 0;
+  SpaceKnight.Game.readyToPlay = false;
+
   SpaceKnight.Game.sequence++;
   // audioObj = new Audio("assets/theme.m4a");
   // audioObj.addEventListener("canplaythrough", event => {
@@ -27,7 +33,7 @@ SpaceKnight.Game.init = function () {
   this.canvas = SpaceKnight.canvas;
   //reference event manager
   this.eventManager = SpaceKnight.Event;
-  // SpaceKnight.Event.generateEvent(SpaceKnight.Event.eventTypes[0].image)  
+  // SpaceKnight.Event.generateEvent(this.eventTypes[0].image)  
   //  this.canvas.init({
   //   FIRST_FRAME,
 
@@ -99,15 +105,18 @@ SpaceKnight.Game.continue = function () {
 
 
 SpaceKnight.Game.startJourney = function () {
+  this.eventTypes = SpaceKnight.Event.eventTypes
+
   this.GAME_STARTED = true;
-  SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[0].text);
-  SpaceKnight.Canvas.init(SpaceKnight.Event.eventTypes[0].image, SpaceKnight.Event.eventTypes[0].spritePosition)
+  SpaceKnight.Event.generateText(this.eventTypes[0].text);
+  SpaceKnight.Canvas.init(this.eventTypes[0].image, this.eventTypes[0].spritePosition)
   console.log("begin");
 };
 
 SpaceKnight.Game.loop = function () {
+  this.eventTypes = SpaceKnight.Event.eventTypes
+
   this.ui = SpaceKnight.UI;
-  this.eventTypes = SpaceKnight.Event.eventTypes;
   this.canvas = SpaceKnight.Canvas;
 
   this.room_completed = this.eventTypes[1].room_completed
@@ -120,15 +129,17 @@ SpaceKnight.Game.loop = function () {
   if (userInput == "zorbax" && this.eventTypes[1].room_completed == "false") {
     SpaceKnight.Game.sequence++
 
-    SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[1].text);
-    SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[1].image, SpaceKnight.Event.eventTypes[1].spritePosition);
+    SpaceKnight.Event.generateText(this.eventTypes[1].text);
+    SpaceKnight.Canvas.images(this.eventTypes[1].image, this.eventTypes[1].spritePosition);
     this.eventTypes[1].room_completed = "true";
 
     setTimeout(function waitFive() {
+      this.eventTypes = SpaceKnight.Event.eventTypes
+
       SpaceKnight.Game.sequence++
 
-      SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[2].text);
-      SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[2].image, SpaceKnight.Event.eventTypes[2].spritePosition)
+      SpaceKnight.Event.generateText(this.eventTypes[2].text);
+      SpaceKnight.Canvas.images(this.eventTypes[2].image, this.eventTypes[2].spritePosition)
     }, 3000)
   }
 
@@ -138,36 +149,118 @@ SpaceKnight.Game.loop = function () {
     setTimeout(function wait() {
 
       SpaceKnight.Event.generateText("YOU FACE SPACE KNIGHT! HAVE AT THEE VILLAIN!");
-      SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[4].image, SpaceKnight.Event.eventTypes[2].spritePosition)
+      SpaceKnight.Canvas.images(this.eventTypes[7].image, this.eventTypes[7].spritePosition)
 
     }, 3000);
-document.getElementById("action").addEventListener("click", function (){
+    document.getElementById("form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      SpaceKnight.Event.generateText("YOU HAVE KILLED THE BARTENDER. GREAT JOB, YOU PSYCHO PATH.");
 
-  SpaceKnight.Event.generateText("YOU HAVE KILLED THE BARTENDER. GREAT JOB, YOU PSYCHO PATH.");
 
-})
-  
 
+
+
+    })
+  }
+  else if (userInput == "talk" && SpaceKnight.Game.sequence >= 3) {
+    SpaceKnight.Event.generateText("I CAN HELP YOU BUT YOU HAVE TO PLAY ME ROCK PAPER SCISSORS. GET READY. ");
+    setTimeout(function wait() {
+
+      SpaceKnight.Event.generateText("ROCK PAPER SCISSORS SHOOT");
+      SpaceKnight.Game.readyToPlay = true;
+    }, 2000);
 
 
   }
-  else if (userInput == "fight"  && SpaceKnight.Game.sequence >= 3 && SpaceKnight.Inventory.sword == false) {
-      SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[7].image,SpaceKnight.Event.eventTypes[7].spritePosition)
+  else if ((userInput == "rock" || userInput == "paper" || userInput == "scissors") && SpaceKnight.Game.readyToPlay == true) {
+    var userChoice = userInput
+    var computerChoice = Math.random();
+    if (computerChoice < 0.34) {
+      computerChoice = "rock";
+    } else if (computerChoice <= 0.67) {
+      computerChoice = "paper";
+    } else {
+      computerChoice = "scissors";
+    }
+    SpaceKnight.Event.generateText(computerChoice);
+    setTimeout(function waitFive() {
+      var compare = function (choice1, choice2) {
+        if (choice1 === choice2) {
+          SpaceKnight.Event.generateText("The result is a tie!");
+          setTimeout(function wait() {
 
-      SpaceKnight.Event.generateText("YOU FACE SPACE KNIGHT! HAVE AT THEE VILLAIN!");
+            SpaceKnight.Event.generateText("ROCK PAPER SCISSORS SHOOT");
+            SpaceKnight.Game.readyToPlay = true;
+          }, 2000);
 
-    document.getElementById("action").addEventListener("click", function (){
+        }
+        else if (choice1 === "rock") {
+          if (choice2 === "scissors") {
+            SpaceKnight.Event.generateText("rock wins");
+          }
+          else if (choice2 === "paper") {
+            SpaceKnight.Event.generateText("paper wins");
+            SpaceKnight.Game.computerWin++;
+
+          }
+        }
+        else if (choice1 === "paper") {
+          if (choice2 === "scissors") {
+            SpaceKnight.Event.generateText("scissors win");
+            SpaceKnight.Game.computerWin++;
+
+
+          }
+          else if (choice2 === "rock") {
+            SpaceKnight.Event.generateText("paper wins");
+          }
+        }
+        else if (choice1 === "scissors") {
+          if (choice2 === "paper") {
+            SpaceKnight.Event.generateText("scissors win");
+          }
+          else if (choice2 === "rock") {
+
+            SpaceKnight.Event.generateText("rock wins");
+            SpaceKnight.Game.computerWin++;
+
+          }
+        }
+
+      }
+      compare(userChoice, computerChoice)
+    }, 1000)
+
+    setTimeout(function waitFive() {
+      if (SpaceKnight.Game.computerWin > 0) {
+        SpaceKnight.Event.generateText("AHHH, THATS TOO BAD.");
+
+      }
+      if (SpaceKnight.Game.computerWin < 1) {
+        SpaceKnight.Event.generateText(this.eventTypes[4].text)
+      }
+
+
+    }, 2000)
+  }
+
+  if (userInput == "fight" && SpaceKnight.Game.sequence >= 3 && SpaceKnight.Inventory.sword == false) {
+    SpaceKnight.Canvas.images(this.eventTypes[7].image, this.eventTypes[7].spritePosition)
+
+    SpaceKnight.Event.generateText("YOU FACE SPACE KNIGHT! HAVE AT THEE VILLAIN!");
+
+    document.getElementById("action").addEventListener("click", function () {
       SpaceKnight.Event.generateText("YOU DIED");
       SpaceKnight.Game.gameOver = true;
-      console.log(SpaceKnight.Game.gameOver)
+      console.log(SpaceKnight.Game.gameOver);
 
-    setTimeout(function wait() {
-      SpaceKnight.Game.loop()
-    }, 2000)
+      setTimeout(function wait() {
+        SpaceKnight.Game.loop()
+      }, 2000)
     })
 
   }
-  else if ((userInput == "bribe" || userInput =="bribe bartender") && SpaceKnight.Game.sequence >= 3 && this.ship.money >= 10) {
+  else if ((userInput == "bribe" || userInput == "bribe bartender") && SpaceKnight.Game.sequence >= 3 && this.ship.money >= 10) {
     SpaceKnight.Event.generateText("BRIBE SUCCESS");
 
     this.ship.money -= 10;
@@ -178,36 +271,74 @@ document.getElementById("action").addEventListener("click", function (){
   else if ((userInput == "beer" || userInput == "buy beer") && SpaceKnight.Game.sequence >= 3 && this.ship.money >= 2) {
     SpaceKnight.Event.generateText("You have bought a beer");
     this.ship.money -= 2;
-    console.log(this.ship.money)
     this.ui.refreshStats();
-
   }
-
 
   else if (userInput === "bribe" && SpaceKnight.Game.sequence >= 3 && SpaceKnight.ShipObject.money < 10) {
     SpaceKnight.Event.generateText("get outta here");
     setTimeout(function wait() {
-
-      SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[2].text);
-      SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[2].image, SpaceKnight.Event.eventTypes[2].spritePosition)
+      SpaceKnight.Event.generateText(this.eventTypes[2].text);
+      SpaceKnight.Canvas.images(this.eventTypes[2].image, this.eventTypes[2].spritePosition)
     }, 3000)
 
   }
 
   else if (userInput === "planets") {
-    SpaceKnight.Event.generateText("get outta here")
+    SpaceKnight.Event.generateText(this.eventTypes[0].text);
+    SpaceKnight.Canvas.init(this.eventTypes[0].image, this.eventTypes[0].spritePosition)
   }
 
   else if (SpaceKnight.Game.gameOver == true) {
-    location.reload();
-
+    SpaceKnight.Event.generateText("GAME OVER")
     setTimeout(function wait() {
-      console.log("asdf")
+      SpaceKnight.Game.init();
       location.reload();
-    }, 4000)
+    }, 2000);
 
   }
 
+
+  //planet 2
+  else if (userInput == "broj" && SpaceKnight.Game.sequence2 < 1) {
+
+    SpaceKnight.Game.sequence2++;
+    SpaceKnight.Canvas.images(this.eventTypes[11].image, this.eventTypes[11].spritePosition)
+    SpaceKnight.Event.generateText("...TRAVELING TO BROJ");
+    setTimeout(function wait() {
+      SpaceKnight.Event.generateText("UH OH, AN ENEMY SPACESHIP HAS INTERCEPTED YOU ON THE WAY TO BROJ.");
+      SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[12].image, SpaceKnight.Event.eventTypes[12].spritePosition);
+      SpaceKnight.ShipObject.hull -= 1;
+      this.ui.refreshStats();
+      document.getElementById("action").addEventListener("click", function () {
+        SpaceKnight.ShipObject.torpedoes -= 1;
+     
+        SpaceKnight.UI.refreshStats();
+        let enemyHealth = 5;
+        let enemyMove = Math.floor(Math.random() * 10)
+        if (enemyMove > SpaceKnight.ShipObject.hull){
+          SpaceKnight.ShipObject.hull -= 1;
+          SpaceKnight.UI.refreshStats();
+
+        }
+        else {
+          enemyHealth-= 1
+          SpaceKnight.UI.refreshStats();
+          
+        }
+        console.log("health"+enemyHealth)
+        console.log("move" + enemyMove)
+
+      })
+    }, 1000);
+
+
+
+  }
+  else if (userInput == "talk" && SpaceKnight.Game.sequence2 >= 1) {
+
+    SpaceKnight.Event.generateText("second broji text");
+
+  }
 
 
   else {
@@ -218,59 +349,13 @@ document.getElementById("action").addEventListener("click", function (){
 
 }
 
-// SpaceKnight.Game.planets = function (){
-//   let input = document.getElementById("input").value;
-//   let userInput = input.toLowerCase();
-//   if (userInput == "zorbax") {
-//     SpaceKnight.Game.sequence++
-//     SpaceKnight.Game.loop();
-
-//     SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[1].text);
-//     SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[1].image, SpaceKnight.Event.eventTypes[1].spritePosition);
-
-//     setTimeout(function waitFive() {
-//       SpaceKnight.Game.sequence++
-
-//       SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[2].text);
-//       SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[2].image, SpaceKnight.Event.eventTypes[2].spritePosition)
-
-//     }, 3000)
-//   }
-  
-//   else if (userInput == "broji"){
-
-//   }
-
-//   else if (userInput == "gorbo"){
-
-//   }
-
-//   else if (userInput == "gorbo"){
-
-//   }
-
-// }
 
 // SpaceKnight.Game.planet2 = function () {
 //   let input = document.getElementById("input").value;
 //   let userInput = input.toLowerCase();
 //   document.getElementById("form").reset();
-//   if (userInput == "zorbax"){
-//     SpaceKnight.Game.sequence++
-//     SpaceKnight.Game.loop();
-//     SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[1].text);
-//     SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[1].image, SpaceKnight.Event.eventTypes[1].spritePosition);
-//     this.eventTypes[1].room_completed = "true";
-
-//     setTimeout(function waitFive() {
-//       SpaceKnight.Game.sequence++
-
-//       SpaceKnight.Event.generateText(SpaceKnight.Event.eventTypes[2].text);
-//       SpaceKnight.Canvas.images(SpaceKnight.Event.eventTypes[2].image, SpaceKnight.Event.eventTypes[2].spritePosition)
-//     }, 3000)
-//   }
-//   else if (userInput == "broji") {
-//     SpaceKnight.Event.generateText("WELCOME TO BROJI")
+//   if (userInput == "talk") {
+//     SpaceKnight.Event.generateText("second broji text");
 
 
 //   }
@@ -285,6 +370,17 @@ SpaceKnight.Game.gameAction = function (image, text, inventory, sound, spritePos
 
   SpaceKnight.Event.generateText(text);
   SpaceKnight.Canvas.images(image, spritePosition);
+  SpaceKnight.ShipObject.init(status);
+  SpaceKnight.Inventory.init(inventory);
+  SpaceKnight.Game.sound(sound)
+
+}
+
+SpaceKnight.Game.gameAction = function (object) {
+  SpaceKnight.Game.sequence++;
+
+  SpaceKnight.Event.generateText(object[0]);
+  SpaceKnight.Canvas.images(object[1], object[2]);
   SpaceKnight.ShipObject.init(status);
   SpaceKnight.Inventory.init(inventory);
   SpaceKnight.Game.sound(sound)

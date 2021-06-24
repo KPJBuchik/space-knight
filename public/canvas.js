@@ -27,7 +27,7 @@ SpaceKnight.Canvas.init = function (fileName, spritePosition) {
     img.onload = () => { 
     context.fillStyle = "#222;";
     context.fillRect(800, 800, 800, 800);
-    context.drawImage(img, 0, 90);
+    context.drawImage(img, 0, 120);
 
     context.drawImage(image2, spritePosition[0], spritePosition[1]);
 

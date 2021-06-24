@@ -38,7 +38,7 @@ SpaceKnight.Event.eventTypes = [
 
         name: 'Zorbax-9',
         image: "assets/zorbax-5.png",
-        text: 'ahhhh, Zorbax-9; a nice planet with a vibrant bar culture. Lets see what we find.',
+        text: '...TRAVELING TO ZORBAX-9',
         spritePosition: [
             180,
             40
@@ -52,10 +52,10 @@ SpaceKnight.Event.eventTypes = [
 
         name: 'Bar',
         image: 'assets/bar.png',
-        text: 'You land on Zorbax-5 and decide to check out the local watering hole for information...Not a very lively bunch, and the bartender is an octopus.',
+        text: 'YOU LAND ON ZORBAX AND HEAD TO THE LOCAL WATERING HOLE TO ASK SOME QUESTIONS...NOT A VERY LIVELY BUNCH, THE BARTENDER TENDS AN EMPTY BAR POLISHING GLASSES WITH HIS EIGHT TENTACLES. HE IS AN OCTOPUS. YOU COULD SEE IF HE HAS SEEN ANYTHING. DEGENERATE TYPES LIKE THIS USUALLY TAKE A LITTLE PALM GREASING THOUGH.                                                                                                 BRIBE',
         spritePosition: [
-            -40,
-            0
+            -60,
+            -100
         ],
         room_completed: false
     },
@@ -64,7 +64,6 @@ SpaceKnight.Event.eventTypes = [
 
         name: 'Bribe',
         image: 'assets/bar.png',
-
         text: "MAYBE I SAW SOMETHING. IT MIGHT COST YOU THOUGH"
     },
     {
@@ -114,33 +113,32 @@ SpaceKnight.Event.eventTypes = [
         gameStatus: "over",
         text: 'YOU HAVE BEEN DEFEATED BY A BARTENDER, GREAT JOB SPACE KNIGHT. YOU PSYCHO PATH.'
     },
-    {
+    {   number: "10",
         type: 'Buy Drink',
         money: -2,
         morale: +2,
         text: 'YOU BUY A BEER, IT TASTES A LITTLE FUNKY.'
     },
     {
-        type: 'SHOP',
-        notification: 'neutral',
-        text: 'You have found a shop',
-        products: [
-            { item: 'food', qty: 20, price: 50 },
-            { item: 'oxen', qty: 1, price: 200 },
-            { item: 'firepower', qty: 2, price: 50 },
-            { item: 'crew', qty: 5, price: 80 }
-        ]
+        number: "11",
+        name: "broj",
+        text: "WELCOME TO BROJ, A HORRIBLE LITTLE SAND PLANET",
+        image: "assets/broj.png",
+        spritePosition: [
+            180,
+            40
+        ],
     },
+    
     {
-        type: 'SHOP',
+        number: "12",
         notification: 'neutral',
-        text: 'You have found a shop',
-        products: [
-            { item: 'food', qty: 30, price: 50 },
-            { item: 'oxen', qty: 1, price: 200 },
-            { item: 'firepower', qty: 2, price: 20 },
-            { item: 'crew', qty: 10, price: 80 }
-        ]
+        image: "assets/ENEMY.png",
+        spritePosition: [
+            180,
+            40
+        ],
+
     },
     {
         type: 'SHOP',
